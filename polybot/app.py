@@ -5,7 +5,8 @@ from bot import ObjectDetectionBot
 
 app = flask.Flask(__name__)
 
-TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
+TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_TOKEN']
+# in the shell : $ngrok http --url=oddly-pleased-snake.ngrok-free.app 8443
 TELEGRAM_APP_URL = os.environ['TELEGRAM_APP_URL']
 
 
@@ -14,7 +15,7 @@ def index():
     return 'Ok'
 
 
-@app.route(f'/{TELEGRAM_TOKEN}/', methods=['POST'])
+@app.route(f'/{TELEGRAM_BOT_TOKEN}/', methods=['POST'])
 def webhook():
     req = request.get_json()
     bot.handle_message(req['message'])
@@ -22,6 +23,6 @@ def webhook():
 
 
 if __name__ == "__main__":
-    bot = ObjectDetectionBot(TELEGRAM_TOKEN, TELEGRAM_APP_URL)
+    bot = ObjectDetectionBot(TELEGRAM_BOT_TOKEN, TELEGRAM_APP_URL)
 
     app.run(host='0.0.0.0', port=8443)

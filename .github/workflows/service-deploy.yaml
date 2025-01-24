@@ -98,7 +98,7 @@ jobs:
             """ > .env
             
             # Take the service down
-            docker compose down
+            docker-compose down
             
             # Take it up with the current updated values
-            docker compose up -d
+            docker-compose up -d

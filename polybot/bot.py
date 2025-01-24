@@ -106,11 +106,10 @@ class ObjectDetectionBot(Bot):
             return None
 
 
-    def http_request_to_yolo5_service(self, file_path):
-        url = "http://localhost:8081/predict"
-        file_name = file_path.split("/", 1)[1]
+    def http_request_to_yolo5_service(self, s3_key):
+        url = "http://yolo5-service:8081/predict"
 
-        params = {"imgName": file_name}  # Query parameters
+        params = {"imgName": s3_key}  # Query parameters
 
         output_file = os.path.join(os.getcwd(), "response_output.json")
         print(f"Output File Path: {output_file}")  # Debug statement
@@ -177,27 +176,21 @@ class ObjectDetectionBot(Bot):
                     return
 
                 # Step 3: HTTP request to yolo5 service
-                self.http_request_to_yolo5_service(photo_path)
+                self.http_request_to_yolo5_service(s3_key)
                 self.reading_from_json()
 
-
-                # # Step 4: Finalization
-                # final_product = self.finalize_step(processed_data)
-                # if not final_product:
-                #     self.send_text(msg['chat']['id'], "Failed to finalize the product.")
-                #     return
-
-                # Send the final product to the user
+                # Step 4: Send the final product to the user
                 self.send_text(msg['chat']['id'], self.full_result)
+
+                # Reset self.full_result
+                self.full_result = "Detected objects:\n"
+
+                # Step 5: Clean up the photo
                 os.remove(photo_path)
+
             except Exception as e:
                 logger.error(f"Error in handle_message: {e}")
                 self.send_text(msg['chat']['id'], "An error occurred during processing.")
-
-
-
-
-            # TODO send the returned results to the Telegram end-user
 
 
 

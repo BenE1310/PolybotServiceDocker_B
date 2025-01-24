@@ -67,13 +67,15 @@ services:
       - mongoCluster
 
   polybot:
-    image: bene1310/polybot:v123
+    image: bene1310/polybot:v125
     container_name: polybot
     ports:
       - 8443:8443
     environment:
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
       TELEGRAM_APP_URL: ${TELEGRAM_APP_URL}
+    volumes:
+      - $HOME/.aws:/root/.aws:ro
     depends_on:
       - yolo5-service
     networks:
